@@ -23,7 +23,7 @@ def acset(contest_id: str, username: str, password: str, envdir: Path):
     else:
         contest = AtCoderContest(contest_id, ac)
         contest_dir = make_contest_dir(contest)
-        make_task(contest_dir, AtCoderTask('', '_a', ac, contest), envdir)
+        make_task(contest_dir, AtCoderTask('', '_', ac, contest), envdir)
 
     for task in contest.get_tasks():
         task_dir = make_task(contest_dir, task, envdir)
