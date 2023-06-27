@@ -23,7 +23,7 @@ def acset(contest_id: str, username: str, password: str, envdir: Path):
     else:
         contest = AtCoderContest(contest_id, ac)
         contest_dir = make_contest_dir(contest)
-        make_task(contest_dir, AtCoderTask('', 'a', ac, contest), envdir)
+        make_task(contest_dir, AtCoderTask('', '_a', ac, contest), envdir)
 
     for task in contest.get_tasks():
         task_dir = make_task(contest_dir, task, envdir)
@@ -48,11 +48,11 @@ def make_sample(task_dir: Path, in_samps: Iterable[str], out_samps: Iterable[str
     in_dir.mkdir(parents=True, exist_ok=True)
     out_dir = task_dir / 'out'
     out_dir.mkdir(parents=True, exist_ok=True)
-    for i, in_samp in enumerate(in_samps):
+    for i, in_samp in enumerate(in_samps, start=1):
         input_path = in_dir / f's{i:02}'
         input_path.write_text(in_samp)
         print(f'WRITE {input_path}')
-    for i, out_samp in enumerate(out_samps):
+    for i, out_samp in enumerate(out_samps, start=1):
         output_path = out_dir / f's{i:02}'
         output_path.write_text(out_samp)
         print(f'WRITE {output_path}')
