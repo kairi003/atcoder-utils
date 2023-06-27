@@ -9,7 +9,7 @@ import re
 import subprocess
 from pathlib import Path
 import shutil
-from .atcoder import *
+from atcoder import *
 
 ENVDIR_NAME = '.acset'
 
@@ -34,7 +34,8 @@ def acset(contest_id: str, username: str, password: str, envdir: Path):
 def make_contest_dir(contest:ContestBase, parent:str='') -> Path:
     contest_dir = Path('.') / parent / contest.name
     contest_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(Path(__file__).with_name('.vscode'), contest_dir / '.vscode', dirs_exist_ok=True)
+    if Path(__file__).with_name('.vscode').exists():
+        shutil.copytree(Path(__file__).with_name('.vscode'), contest_dir / '.vscode', dirs_exist_ok=True)
     subprocess.run(f'start {contest_dir}')
     subprocess.run(f'start {contest.url}')
     subprocess.run(f'start {contest.url}/tasks')
@@ -82,11 +83,11 @@ def main():
 
     base_list = ['.', '~']
     for base in base_list:
-        envdir = Path(base) / ENVDIR_NAME
+        envdir = (Path(base) / ENVDIR_NAME).expanduser()
         if envdir.exists(): break
     envdir = envdir.absolute()
     config = json.loads((envdir / 'config.json').read_text())
-    dir_path = Path(config['dir_path'])
+    dir_path = Path(config['dir_path']).expanduser()
     dir_path.mkdir(parents=True, exist_ok=True)
     os.chdir(dir_path)
     acset(contest_id, **config['profile'], envdir=envdir)
