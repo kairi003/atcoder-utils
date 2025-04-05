@@ -3,6 +3,7 @@
 # {contest_url}
 # {task_url}
 
+import os
 import sys
 import math
 from collections import *
@@ -18,6 +19,10 @@ def i2nn(): return list(map(int, i2s().split()))
 def ii2nn(n): return [i2nn() for _ in range(n)]
 YN=['No','Yes']
 
+if "ATCODER" not in os.environ:
+    def debug(*arg, **kwarg): print(*arg, file=sys.stderr, **kwarg)
+else:
+    def debug(*arg, **kwarg): pass
 
 def main():
     return

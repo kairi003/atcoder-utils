@@ -14,7 +14,7 @@ def add_top(string, head):
 def strtr(string, to):
     return re.sub(r'\r\n|\r|\n', to, string)
 
-def arg_parse(args):
+def arg_parse(args: list[str]) -> list[str]:
     args[0] = 'python'
     if len(args) == 1:
         filelist = os.listdir('./')

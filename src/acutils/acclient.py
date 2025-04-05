@@ -11,6 +11,17 @@ from bs4 import BeautifulSoup, Tag
 from requests import Session
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from http.cookiejar import MozillaCookieJar
+from pathlib import Path
+
+__all__ = [
+    'AtCoderSession',
+    'AtCoderTask',
+    'AtCoderPrintTask',
+    'ContestBase',
+    'AtCoderContest',
+    'VirtualContest',
+]
 
 RETRY_COUNT = 10
 #USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
@@ -24,18 +35,15 @@ class AtCoderSession(Session):
         self.mount("https://", HTTPAdapter(max_retries=retries))
         #self.headers = {'User-Agent': USER_AGENT}
 
-    def login(self, username: str, password: str):
-        login_url = 'https://atcoder.jp/login'
-        res = self.get(login_url)
-        login_page = BeautifulSoup(res.content, 'lxml')
-        form = login_page.select_one('#main-container form')
-        form_values = {f['name']: f.get('value', '')
-                       for f in form.select('input')}
-        form_values['username'] = username
-        form_values['password'] = password
-        response = self.post(login_url, params=form_values)
-        if response.url != 'https://atcoder.jp/home':
-            raise Exception('username or password is wrong')
+    def login(self, cookies_path: Path):
+        jar = MozillaCookieJar(str(cookies_path.absolute()))
+        jar.load(ignore_discard=True, ignore_expires=True)
+        self.cookies = jar
+        login_url = 'https://atcoder.jp/settings'
+        res = self.get(login_url, allow_redirects=False)
+        if res.status_code != 200:
+            raise Exception('cookie is expired')
+        jar.save(ignore_discard=True, ignore_expires=True)
 
 
 class AtCoderTask:

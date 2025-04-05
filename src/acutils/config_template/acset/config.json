@@ -1,0 +1,7 @@
+{
+    "dir_path": "~/Documents/AtCoder",
+    "cookies_path": "./cookies.txt",
+    "template_path": "./template",
+    "browser_open": true,
+    "exec_command": ["start"]
+}
